@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <title>Document</title>
+</head>
+<style>
+      * {
+        box-sizing: border-box;
+      }
+
+      .container {
+          display: flex;
+        justify-content: space-around;
+        width: 80%;
+        height: 600px;
+        margin: 1.8rem auto;
+        background-color: #3e4ca3;
+        border-radius: 5px;
+      }
+
+      .display {
+          display: flex;
+          flex-direction: column;
+          max-width: 47%;
+          width: 100%;
+      }
+
+      h4 {
+        padding-left: 10px;
+        color: white;
+      }
+
+      #preview, #editor {
+          height: 520px;
+          width: 100%;
+          padding: 10px;
+          background-color: #9dedec;
+          border-radius: 5px;
+          overflow: scroll;
+        }
+</style>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+      class MarkdownPreviewer extends React.Component {
+            constructor(props) {
+
+              super(props);
+
+              this.defaultMD = `
+          # This is a markdown previewer.
+
+          ## Please Enter some markdown text here and it will be display the result at the previewer.
+
+          This program is using the Marked library from
+
+          \[Marked.js\](https://cdnjs.cloudflare.com/ajax/libs/marked/1.1.0/marked.min.js "Marked.JS")
+
+          You can use code in-line \`console.log("Hello World!")\`
+
+          Here's an example of unordered list:
+
+          * Australia
+          * China
+          * United States
+
+          Here's an example of code:
+
+          \`\`\`
+          var num=0;
+          num = num + 1;
+          \`\`\`
+
+          Some html code: <pre><code>&lt;div class="footer"&gt; Example Corporation&lt;/div&gt; &lt;p&gt;test&lt;/p&gt;</code></pre>
+
+          **Image of Proboscis Monkey :**
+
+          ![Proboscis monkeys](https://www.hakaimagazine.com/wp-content/uploads/header-proboscis-monkeys.jpg)
+
+          > Hope you enjoy this Markdown Previewer.
+
+          > Feel free to modify this!`;
+
+              this.state = {
+                input : this.defaultMD
+              }
+              this.handleChange = this.handleChange.bind(this);
+              this.displayMarkdown = this.displayMarkdown.bind(this);
+            }
+
+            displayMarkdown() {
+              let md = marked(this.state.input);
+              return {__html: md};
+            }
+
+            handleChange(e) {
+            this.setState({input : e.target.value})
+            }
+
+            render() {
+
+              return (
+                <div className='container'>
+                  <div className='display'>
+                  <h4>Markdown Editor</h4>
+                    <textarea id='editor'
+                              value={this.state.input}
+                              onChange={ e => this.handleChange(e)}/>
+                  </div>
+
+                  <div className='display'>
+                    <h4>Markdown Preview</h4>
+                    <div id='preview' dangerouslySetInnerHTML={this.displayMarkdown()}></div>
+                  </div>
+                </div>
+              )
+            }
+
+          }
+
+          ReactDOM.render(<MarkdownPreviewer/>, document.getElementById('root'));
+  </script>
+</body>
+</html>
